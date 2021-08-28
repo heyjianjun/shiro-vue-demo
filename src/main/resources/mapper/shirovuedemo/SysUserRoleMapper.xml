@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heyjianjun.shirovuedemo.mapper.SysUserRoleMapper">
+    <select id="queryRoleListByUserId" parameterType="long" resultType="com.heyjianjun.shirovuedemo.entity.SysRole">
+        select sr.*
+        from sys_role sr
+                 inner join sys_user_role sur on sr.role_id = sur.role_id
+        where sur.user_id = #{userId} and sr.status = '0';
+    </select>
+</mapper>
