@@ -17,6 +17,16 @@ public class GlobalConstants {
 
     public static final String SYS_SUCCESS_MSG = "成功";
 
+    /**
+     * 登录的用户的token
+     */
+    public static final String USER_LOGIN_STATUS = "userLogin:";
+
+    /**
+     * token失效时间 小时
+     */
+    public final static long LOGIN_EXPIRE = 24;
+
    public static class SysUserConstants {
 
         /**
@@ -29,5 +39,18 @@ public class GlobalConstants {
          */
         public static final String DELETE_STATUS = "1";
 
+    }
+
+    public static class LoginStatus{
+        /**
+         * 正常
+         *
+         */
+        public static final String NORMAL = "0";
+
+        /**
+         * 已被挤下线
+         */
+        public static final String OFFLINE = "1";
     }
 }

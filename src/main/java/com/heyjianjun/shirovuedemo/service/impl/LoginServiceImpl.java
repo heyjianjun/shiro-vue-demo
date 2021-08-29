@@ -1,5 +1,6 @@
 package com.heyjianjun.shirovuedemo.service.impl;
 
+import com.heyjianjun.shirovuedemo.constant.GlobalConstants;
 import com.heyjianjun.shirovuedemo.dto.UserDTO;
 import com.heyjianjun.shirovuedemo.service.ILoginService;
 import com.heyjianjun.shirovuedemo.utils.generate.TokenUtils;
@@ -16,10 +17,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class LoginServiceImpl implements ILoginService {
 
-    /**
-     * token失效时间 小时
-     */
-    private final static long EXPIRE = 24;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -36,7 +33,8 @@ public class LoginServiceImpl implements ILoginService {
         // 脱敏
         user.setPassword("");
         user.setSalt("");
-        redisTemplate.opsForValue().set(token, user, EXPIRE, TimeUnit.HOURS);
+        user.setStatus(GlobalConstants.LoginStatus.NORMAL);
+        redisTemplate.opsForValue().set(token, user, GlobalConstants.LOGIN_EXPIRE, TimeUnit.HOURS);
         return token;
     }
 }

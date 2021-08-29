@@ -1,17 +1,21 @@
 package com.heyjianjun.shirovuedemo.shiro.realm;
 
+import com.heyjianjun.shirovuedemo.constant.GlobalConstants;
 import com.heyjianjun.shirovuedemo.dto.RoleDOT;
 import com.heyjianjun.shirovuedemo.dto.UserDTO;
 import com.heyjianjun.shirovuedemo.service.ISysUserService;
 import com.heyjianjun.shirovuedemo.utils.MyApplicationBeanUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author : heyjianjun
@@ -60,7 +64,21 @@ public class CustomerRealm extends AuthorizingRealm {
         if (user == null) {
             throw new IncorrectCredentialsException("token失效，请重新登录");
         }
+        if (StringUtils.equals(user.getStatus(), GlobalConstants.LoginStatus.OFFLINE)) {
+            getRedisTemplate().delete(token);
+            throw new IncorrectCredentialsException("您的账号已在别处登录，请重新登录");
+        }
+        // 只允许一个客户端登录
+        String loginToken = (String) getRedisTemplate().opsForValue().get(GlobalConstants.USER_LOGIN_STATUS + user.getUserId());
+        if (StringUtils.isNotBlank(loginToken)) {
+            // 将已登录账户置为下线
+            UserDTO loginUser = new UserDTO();
+            BeanUtils.copyProperties(user, loginUser);
+            loginUser.setStatus(GlobalConstants.LoginStatus.OFFLINE);
+            getRedisTemplate().opsForValue().set(loginToken, loginUser, GlobalConstants.LOGIN_EXPIRE, TimeUnit.HOURS);
+        }
         user.setPassword(token);
+        getRedisTemplate().opsForValue().set(GlobalConstants.USER_LOGIN_STATUS + user.getUserId(), token);
         return new SimpleAuthenticationInfo(user, token, this.getName());
     }
 

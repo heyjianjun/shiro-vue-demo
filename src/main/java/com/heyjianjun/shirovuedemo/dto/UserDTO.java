@@ -38,7 +38,7 @@ public class UserDTO implements Serializable {
     private String salt;
 
     /**
-     * 状态（0正常 1删除 2停用）
+     * 状态（0正常 1已下线）
      */
     private String status;
 

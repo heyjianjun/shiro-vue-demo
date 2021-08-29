@@ -12,6 +12,7 @@ public class AuthToken extends UsernamePasswordToken {
 
     public AuthToken(String token) {
         this.token = token;
+        super.setRememberMe(true);
     }
 
     @Override

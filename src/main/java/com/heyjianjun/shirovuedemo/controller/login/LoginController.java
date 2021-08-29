@@ -1,8 +1,9 @@
-package com.heyjianjun.shirovuedemo.controller;
+package com.heyjianjun.shirovuedemo.controller.login;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.heyjianjun.shirovuedemo.constant.ErrorConstants;
 import com.heyjianjun.shirovuedemo.constant.GlobalConstants;
+import com.heyjianjun.shirovuedemo.controller.BaseController;
 import com.heyjianjun.shirovuedemo.dto.PermissionDTO;
 import com.heyjianjun.shirovuedemo.dto.RoleDOT;
 import com.heyjianjun.shirovuedemo.dto.UserDTO;
@@ -134,6 +135,11 @@ public class LoginController extends BaseController {
     @RequestMapping("test")
     @RequiresPermissions("user:*")
     public ResultVO test(@RequestBody Map<String, Object> params) {
+        return ResultUtils.success();
+    }
+
+    @RequestMapping("test1")
+    public ResultVO test1(@RequestBody Map<String, Object> params) {
         return ResultUtils.success();
     }
 }

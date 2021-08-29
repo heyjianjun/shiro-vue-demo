@@ -2,6 +2,7 @@ package com.heyjianjun.shirovuedemo.shiro.auth;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.heyjianjun.shirovuedemo.constant.GlobalConstants;
 import com.heyjianjun.shirovuedemo.dto.UserDTO;
 import com.heyjianjun.shirovuedemo.utils.MyApplicationBeanUtil;
 import com.heyjianjun.shirovuedemo.utils.result.ResultUtils;
@@ -54,7 +55,6 @@ public class AuthFilter extends AuthenticatingFilter {
     @Override
     protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
         // 登录成功执行登录成功后序操作, 比如记录日志 登录时间 登录ip等
-        System.out.println("==========");
         return super.onLoginSuccess(token, subject, request, response);
     }
 
@@ -116,7 +116,26 @@ public class AuthFilter extends AuthenticatingFilter {
         }
         // 检查token是否失效
         UserDTO user = (UserDTO) getRedisTemplate().opsForValue().get(token);
-        return user == null ? executeLogin(servletRequest, servletResponse) : true;
+        if (user == null) {
+            HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+            httpResponse.setHeader("Access-Control-Allow-Origin", "*");
+            httpResponse.setCharacterEncoding("UTF-8");
+            ResultVO resultVO = ResultUtils.fail("401", "登录已失效,请重新登录");
+            httpResponse.getWriter().print(JSONObject.toJSON(resultVO));
+            return false;
+        }
+        if (StringUtils.equals(user.getStatus(), GlobalConstants.LoginStatus.OFFLINE)) {
+            getRedisTemplate().delete(token);
+            HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+            httpResponse.setHeader("Access-Control-Allow-Origin", "*");
+            httpResponse.setCharacterEncoding("UTF-8");
+            ResultVO resultVO = ResultUtils.fail("401", "您的账号已在别处登录，请重新登录");
+            httpResponse.getWriter().print(JSONObject.toJSON(resultVO));
+            return false;
+        }
+        return true;
     }
 
     public RedisTemplate getRedisTemplate() {

@@ -6,6 +6,8 @@ import com.heyjianjun.shirovuedemo.utils.result.ResultVO;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +22,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    public final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ResponseBody
     @ExceptionHandler(BusinessException.class)
@@ -49,6 +53,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler({UnauthenticatedException.class})
     public ResultVO authenticatedErrorHandler(HttpServletRequest req, HttpServletResponse res, Exception e) {
+        logger.error("GlobalExceptionHandler.authenticatedErrorHandler>>>>>>>>>error:{}", e);
         return ResultUtils.fail(GlobalConstants.SYS_ERR_CODE, "认证失败");
     }
 
