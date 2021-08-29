@@ -135,6 +135,11 @@ public class AuthFilter extends AuthenticatingFilter {
             httpResponse.getWriter().print(JSONObject.toJSON(resultVO));
             return false;
         }
+        // 登录失效重新登录
+        Subject subject = getSubject(servletRequest, servletResponse);
+        if (subject == null || !subject.isAuthenticated()) {
+            return executeLogin(servletRequest, servletResponse);
+        }
         return true;
     }
 

@@ -1,7 +1,7 @@
 package com.heyjianjun.shirovuedemo.service;
 
 import com.heyjianjun.shirovuedemo.dto.UserDTO;
-import com.heyjianjun.shirovuedemo.entity.SysUser;
+import com.heyjianjun.shirovuedemo.shiro.auth.AuthToken;
 
 /**
  * @Author : heyjianjun
@@ -14,5 +14,5 @@ public interface ILoginService {
      *
      * @return
      */
-    String createToken(UserDTO user);
+    AuthToken createToken(UserDTO user);
 }

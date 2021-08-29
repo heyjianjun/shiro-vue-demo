@@ -88,13 +88,12 @@ public class LoginController extends BaseController {
         });
         user.setRoles(roleList);
         //创建token
-        String token = loginService.createToken(user);
+        AuthToken authToken = loginService.createToken(user);
         // 登录
-        AuthToken authToken = new AuthToken(token);
         Subject subject = SecurityUtils.getSubject();
         subject.login(authToken);
         Map<String, Object> result = new HashMap<>();
-        result.put("token", token);
+        result.put("token", authToken.getPrincipal());
         return ResultUtils.success(result);
     }
 
