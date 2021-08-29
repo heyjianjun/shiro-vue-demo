@@ -2,8 +2,8 @@ package com.heyjianjun.shirovuedemo.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,12 +12,14 @@ import java.util.List;
  */
 @Setter
 @Getter
-public class RoleDOT implements Serializable {
+public class RoleDOT extends BaseDTO {
 
     private Long roleId;
 
+    @NotEmpty(message = "角色名不能为空")
     private String roleName;
 
+    @NotEmpty(message = "角色编码不能为空")
     private String roleCode;
 
     /**

@@ -1,7 +1,7 @@
 package com.heyjianjun.shirovuedemo.service;
 
-import com.heyjianjun.shirovuedemo.entity.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.heyjianjun.shirovuedemo.entity.SysUser;
 
 /**
  * <p>

@@ -27,7 +27,7 @@ public class GlobalConstants {
      */
     public final static long LOGIN_EXPIRE = 24;
 
-   public static class SysUserConstants {
+   public static class CommonStatusConstants {
 
         /**
          * 有效

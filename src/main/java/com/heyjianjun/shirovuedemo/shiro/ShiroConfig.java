@@ -1,6 +1,7 @@
 package com.heyjianjun.shirovuedemo.shiro;
 
 import com.heyjianjun.shirovuedemo.shiro.auth.AuthFilter;
+import com.heyjianjun.shirovuedemo.shiro.cache.RedisCacheManager;
 import com.heyjianjun.shirovuedemo.shiro.realm.CustomerRealm;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -8,16 +9,11 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 
 import javax.servlet.Filter;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -91,6 +87,14 @@ public class ShiroConfig {
 
     @Bean
     public CustomerRealm customerRealm() {
-        return new CustomerRealm();
+        CustomerRealm customerRealm = new CustomerRealm();
+        //开启认证权限信息缓存管理
+        customerRealm.setCacheManager(new RedisCacheManager());
+        customerRealm.setCachingEnabled(true);
+        customerRealm.setAuthenticationCachingEnabled(true);
+        customerRealm.setAuthenticationCacheName("authenticationCache");
+        customerRealm.setAuthorizationCachingEnabled(true);
+        customerRealm.setAuthorizationCacheName("authorizationCache");
+        return customerRealm;
     }
 }

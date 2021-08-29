@@ -28,6 +28,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(BusinessException.class)
     public ResultVO errorHandler(HttpServletRequest req, HttpServletResponse res, BusinessException e) {
+        logger.error("GlobalExceptionHandler.errorHandler>>>>>>>>>error:{}", e);
         return ResultUtils.fail(e.getErrorCode(), e.getErrorMessage());
     }
 
@@ -41,12 +42,14 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(UnknownAccountException.class)
     public ResultVO loginErrorHandler(HttpServletRequest req, HttpServletResponse res, UnknownAccountException e) {
+        logger.error("GlobalExceptionHandler.loginErrorHandler>>>>>>>>>error:{}", e);
         return ResultUtils.fail(GlobalConstants.SYS_ERR_CODE, "账户不存在");
     }
 
     @ResponseBody
     @ExceptionHandler({UnauthorizedException.class})
     public ResultVO authorizedErrorHandler(HttpServletRequest req, HttpServletResponse res, Exception e) {
+        logger.error("GlobalExceptionHandler.authorizedErrorHandler>>>>>>>>>error:{}", e);
         return ResultUtils.fail(GlobalConstants.SYS_ERR_CODE, "权限不足");
     }
 
@@ -73,6 +76,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(Exception.class)
     public ResultVO commonErrorHandler(HttpServletRequest req, HttpServletResponse res, Exception e) {
+        logger.error("GlobalExceptionHandler.commonErrorHandler>>>>>>>>>error:{}", e);
         return ResultUtils.fail();
     }
 

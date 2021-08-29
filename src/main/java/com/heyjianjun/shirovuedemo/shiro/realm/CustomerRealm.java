@@ -70,7 +70,7 @@ public class CustomerRealm extends AuthorizingRealm {
         }
         // 只允许一个客户端登录
         String loginToken = (String) getRedisTemplate().opsForValue().get(GlobalConstants.USER_LOGIN_STATUS + user.getUserId());
-        if (StringUtils.isNotBlank(loginToken)) {
+        if (StringUtils.isNotBlank(loginToken)&& !StringUtils.equals(loginToken,token)) {
             // 将已登录账户置为下线
             UserDTO loginUser = new UserDTO();
             BeanUtils.copyProperties(user, loginUser);
@@ -78,8 +78,8 @@ public class CustomerRealm extends AuthorizingRealm {
             getRedisTemplate().opsForValue().set(loginToken, loginUser, GlobalConstants.LOGIN_EXPIRE, TimeUnit.HOURS);
         }
         user.setPassword(token);
-        getRedisTemplate().opsForValue().set(GlobalConstants.USER_LOGIN_STATUS + user.getUserId(), token);
-        return new SimpleAuthenticationInfo(user, token, this.getName());
+        getRedisTemplate().opsForValue().set(GlobalConstants.USER_LOGIN_STATUS + user.getUserId(), token, GlobalConstants.LOGIN_EXPIRE, TimeUnit.HOURS);
+        return new SimpleAuthenticationInfo(token, token, this.getName());
     }
 
     /**

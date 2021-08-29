@@ -1,19 +1,16 @@
 package com.heyjianjun.shirovuedemo.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * @Author : heyjianjun
  * @create 2021/8/28 16:44
  */
-@Getter
-@Setter
-public class UserDTO implements Serializable {
+@Data
+public class UserDTO extends BaseDTO {
 
     /**
      * 用户编码
@@ -43,4 +40,5 @@ public class UserDTO implements Serializable {
     private String status;
 
     private List<RoleDOT> roles;
+
 }

@@ -65,7 +65,7 @@ public class LoginController extends BaseController {
         // 根据用户名查找
         QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_name", userName);
-        queryWrapper.eq("status", GlobalConstants.SysUserConstants.VALID_STATUS);
+        queryWrapper.eq("status", GlobalConstants.CommonStatusConstants.VALID_STATUS);
         SysUser one = userService.getOne(queryWrapper);
         if (one == null) {
             throw new BusinessException(ErrorConstants.ACCOUNT_NOT_EXIST);
@@ -115,7 +115,7 @@ public class LoginController extends BaseController {
         String salt = SaltUtils.generateSale(6);
         Md5Hash md5Hash = new Md5Hash(user.getPassword(), salt, 1024);
         user.setPassword(md5Hash.toHex());
-        user.setStatus(GlobalConstants.SysUserConstants.VALID_STATUS);
+        user.setStatus(GlobalConstants.CommonStatusConstants.VALID_STATUS);
         user.setSalt(salt);
         userService.save(user);
         return ResultUtils.success();
@@ -125,7 +125,9 @@ public class LoginController extends BaseController {
     @ResponseBody
     public ResultVO logout() {
         String token = request.getHeader("token");
+        UserDTO user = (UserDTO) redisTemplate.opsForValue().get(token);
         redisTemplate.delete(token);
+        redisTemplate.delete(GlobalConstants.USER_LOGIN_STATUS + user.getUserId());
         Subject subject = SecurityUtils.getSubject();
         subject.logout();//退出用户
         return ResultUtils.success();

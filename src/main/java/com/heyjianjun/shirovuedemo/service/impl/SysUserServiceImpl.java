@@ -1,5 +1,8 @@
 package com.heyjianjun.shirovuedemo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.heyjianjun.shirovuedemo.entity.SysUser;
 import com.heyjianjun.shirovuedemo.mapper.SysUserMapper;
 import com.heyjianjun.shirovuedemo.service.ISysUserService;
@@ -16,5 +19,4 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements ISysUserService {
-
 }

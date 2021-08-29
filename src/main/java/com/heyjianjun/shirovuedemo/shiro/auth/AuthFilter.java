@@ -1,17 +1,18 @@
 package com.heyjianjun.shirovuedemo.shiro.auth;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.heyjianjun.shirovuedemo.constant.GlobalConstants;
 import com.heyjianjun.shirovuedemo.dto.UserDTO;
 import com.heyjianjun.shirovuedemo.utils.MyApplicationBeanUtil;
 import com.heyjianjun.shirovuedemo.utils.result.ResultUtils;
 import com.heyjianjun.shirovuedemo.utils.result.ResultVO;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -90,6 +91,9 @@ public class AuthFilter extends AuthenticatingFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        if (((HttpServletRequest) request).getMethod().equals(RequestMethod.OPTIONS.name())) {
+            return true;
+        }
         return false;
     }
 
@@ -135,7 +139,7 @@ public class AuthFilter extends AuthenticatingFilter {
             httpResponse.getWriter().print(JSONObject.toJSON(resultVO));
             return false;
         }
-        // 登录失效重新登录
+        // 登录对象不存在或者认证已经失效,重新登录
         Subject subject = getSubject(servletRequest, servletResponse);
         if (subject == null || !subject.isAuthenticated()) {
             return executeLogin(servletRequest, servletResponse);

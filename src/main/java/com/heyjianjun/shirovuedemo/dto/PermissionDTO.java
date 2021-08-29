@@ -3,15 +3,13 @@ package com.heyjianjun.shirovuedemo.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 /**
  * @Author : heyjianjun
  * @create 2021/8/28 16:46
  */
 @Setter
 @Getter
-public class PermissionDTO implements Serializable {
+public class PermissionDTO extends BaseDTO {
 
     private Long permissionId;
 
